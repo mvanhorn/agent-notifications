@@ -241,6 +241,11 @@ is_wsl_environment() {
         return 0
     fi
 
+    # Supplemental: WSL usually mounts the Windows C: drive here. An ordinary
+    # Linux directory at this path also matches; CLAUDE_NOTIFICATIONS_ALLOW_WSL
+    # remains the bypass. This does not prove Windows ancestry or see custom mounts.
+    [ -d /mnt/c ] && return 0
+
     return 1
 }
 

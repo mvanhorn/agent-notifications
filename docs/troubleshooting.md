@@ -216,6 +216,10 @@ You run the bootstrap command from Windows Terminal or PowerShell, but the outpu
 
 PowerShell and Windows Terminal can resolve `bash` to WSL. In that case the installer is running inside Linux, not Git Bash, so Linux platform detection is technically correct but not useful for Windows Claude Code.
 
+[`is_wsl_environment()`](../bin/install.sh) stops that path before preflight checks and platform detection. After the explicit override and the Linux `uname` gate, it checks `WSL_DISTRO_NAME`, `WSL_INTEROP`, and a case-insensitive `Microsoft` or `WSL` match in `/proc/version`. When those probes do not identify WSL, a directory at `/mnt/c` — the usual WSL mount for the Windows `C:` drive — is an additional heuristic.
+
+That `/mnt/c` fallback is supplemental. It does not prove Windows ancestry, and it does not cover custom mount locations. An ordinary Linux directory named `/mnt/c` also triggers the heuristic and can be bypassed with the existing override.
+
 ### Fix
 
 Open Git Bash from the Start menu and run the [secure install command](INSTALLATION.md#quick-install-recommended) there. Do not run it from PowerShell if `bash` opens WSL.
